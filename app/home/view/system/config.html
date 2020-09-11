@@ -1,0 +1,70 @@
+<include "../public/head"/>
+<body>
+<div class="je-p20">
+    <form class="je-form-item">
+    <table class="je-table je-f14">
+        <colgroup>
+            <col width="30%">
+            <col width="70%">
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>参数说明</th>
+                <th>参数值</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>端口检测</td>
+
+                <td>
+                    <select class="myselect" id="check_mode">
+                        <option <if "$check_mode=='default'">selected</if> value="default">默认</option>
+                        <option <if "$check_mode=='strict'">selected</if> value="loose">宽松</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+jeui.use(["jquery","jeBox","jeCheck","jeSelect"],function () {
+
+    $(".myselect").jeSelect({
+        sosList: false,
+        itemfun:function(elem, index, val) {
+
+            $.ajax({
+                type: "POST",
+                url: "/system/ajax",
+                timeout: 60000,
+                async: true,
+                data: {
+                    "type": "check_mode",
+                    "value": val
+                },
+                success: function(data, textStatus) {   
+                    if(data.ret == 0){
+                        parent.jeBox.alert(data.message);
+                    }else if(data.ret == 1){
+                        parent.jeBox.msg('设置成功！');
+                    }else{
+                        jeBox.alert(data);
+                    }
+                }
+            });
+
+            console.log(val)
+        }
+    });
+
+ })
+</script>
+<!--
+http://www.qdfuns.com/notes/13967/3cdebc6a132f33a3e65aa2b6019a7487.html
+http://www.jq22.com/demo/jQueryNavHover20161129/
+-->
+</body>
+</html>
